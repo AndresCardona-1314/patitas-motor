@@ -33,7 +33,7 @@ let actual = cabeza;
 
 while(actual !== null){
     const {fecha, motivo, veterinario, costo} = actual.dato;
-    console.log(`[${fecha}] ${motivo} - ${veterinario} ($${costo.toLocaleString("es-CO")})`);
+    console.log(`[${fecha}] ${motivo} - ${veterinario} - costo: $${costo.toLocaleString("es-CO")}`);
     actual = actual.siguiente;
 }
 
@@ -47,3 +47,14 @@ while (punteroCosto !== null){
 
 console.log(`\nCosto total del historial: $${totalCosto.toLocaleString("es-CO")}`);
 
+/* console.log("\n=== SIMULACIÓN: PERDIENDO EL ENLACE DEL PRIMER NODO ===");
+
+nodo1.siguiente = null;
+
+let recorridoRoto = cabeza;
+
+while (recorridoRoto !== null){
+    console.log("Atención encontrada; ", recorridoRoto.dato.motivo);
+    recorridoRoto = recorridoRoto.siguiente;
+}
+ */
