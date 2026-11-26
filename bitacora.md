@@ -47,5 +47,86 @@ Al asignar `nodo1.siguiente = null`, el recorrido desde `cabeza` **solo logra vi
 
 
 
+## Diagramas de referencias
 
 
+
+### A. `agregarAlFinal(nuevo)`
+
+- **Caso 1: Lista vacía (`cabeza === null`, `cola === null`, `tamanio === 0`)**
+
+  - **Cambio:** Tanto `cabeza` como `cola` pasan a apuntar al `nuevo` nodo.
+
+  ```text
+  Antes:  cabeza ─► null     cola ─► null
+
+  Después: cabeza ──┐
+                    ▼
+                 [ nuevo ] ──► null
+                    ▲
+           cola ────┘
+  ```
+
+- **Caso 2: Lista con 1 nodo (`cabeza === cola === [A]`)**
+
+  - **Cambio:** `cola.siguiente` (que es `[A].siguiente`) apunta a `nuevo`, y luego `cola` se mueve a `nuevo`. `cabeza` no cambia.
+
+  ```text
+  Antes:   cabeza ─► [ A ] ◄─ cola
+
+  Después: cabeza ─► [ A ] ───► [ nuevo ] ──► null
+                                    ▲
+                           cola ────┘
+  ```
+
+- **Caso 3: Lista con varios nodos (`cabeza ─► [A] ─► [B] ◄─ cola`)**
+
+  - **Cambio:** `cola.siguiente` (`[B].siguiente`) se enlaza a `nuevo`, y `cola` avanza hacia `nuevo`. `cabeza` y `[A]` permanecen intactos.
+
+  ```text
+  Antes:   cabeza ─► [ A ] ───► [ B ] ◄─ cola
+
+  Después: cabeza ─► [ A ] ───► [ B ] ───► [ nuevo ] ──► null
+                                               ▲
+                                      cola ────┘
+  ```
+
+### B. `agregarAlInicio(nuevo)`
+
+- **Caso 4: Lista vacía (`cabeza === null`, `cola === null`, `tamanio === 0`)**
+
+  - **Cambio:** Igual que al final: `cabeza` y `cola` pasan a apuntar a `nuevo`.
+
+  ```text
+  Antes:  cabeza ─► null     cola ─► null
+
+  Después: cabeza ──┐
+                    ▼
+                 [ nuevo ] ──► null
+                    ▲
+           cola ────┘
+  ```
+
+- **Caso 5: Lista con 1 nodo (`cabeza === cola === [A]`)**
+
+  - **Cambio:** `nuevo.siguiente` apunta a la actual `cabeza` (`[A]`), y luego `cabeza` retrocede hacia `nuevo`. `cola` se queda en `[A]`.
+
+  ```text
+  Antes:   cabeza ─► [ A ] ◄─ cola
+
+  Después: cabeza ─► [ nuevo ] ───► [ A ] ──► null
+                                       ▲
+                              cola ────┘
+  ```
+
+- **Caso 6: Lista con varios nodos (`cabeza ─► [A] ─► [B] ◄─ cola`)**
+
+  - **Cambio:** `nuevo.siguiente` apunta a `cabeza` (`[A]`), y `cabeza` se actualiza a `nuevo`. `cola` sigue apuntando a `[B]`.
+
+  ```text
+  Antes:   cabeza ─► [ A ] ───► [ B ] ◄─ cola
+
+  Después: cabeza ─► [ nuevo ] ───► [ A ] ───► [ B ] ──► null
+                                                  ▲
+                                         cola ────┘
+  ```
