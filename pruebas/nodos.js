@@ -10,7 +10,7 @@ const nodo1 = new Nodo({
 
 const nodo2 = new Nodo({
     fecha: "15/03",
-    motivo: "control de peso",
+    motivo: "Control de peso",
     veterinario: "Dr. Gómez",
     costo: 40000
 })
@@ -18,7 +18,7 @@ const nodo2 = new Nodo({
 
 const nodo3 = new Nodo({
     fecha: "20/05",
-    motivo: "limpieza dental",
+    motivo: "Limpieza dental",
     veterinario: "Dra. Ríos",
     costo: 150000
 })

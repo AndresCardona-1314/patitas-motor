@@ -64,3 +64,71 @@ console.log("\n=== RECORRIDO CON CALLBACK ===");
 listaFinal.recorrer((atencion, idx) => {
     console.log(`${idx + 1}. [${atencion.fecha}] ${atencion.motivo} - $${atencion.costo.toLocaleString("es-CO")}`);
 });
+
+// ============================================================================
+// Pruebas de buscar, insertarDespuesDe y eliminar (Casos Borde)
+// ============================================================================
+
+
+console.log(`\n=== PRUEBAS DE BÚSQUEDA, INSERCIÓN INTERMEDIA Y ELIMINACIÓN ===`);
+
+const atencion4 = {fecha: "10/06", motivo: "Desparasitación", veterinario: "Dr. Gómez", costo: 35000};
+
+// 1. Eliminar en una lista vacía
+const listaVacia = new ListaEnlazada();
+const resVacia = listaVacia.eliminar((a) => a.motivo === "Vacunación");
+console.assert(resVacia === null, "Error: debería devolver null en lista vacía");
+verificarEstado(listaVacia, "Border 1: Eliminar en lista vacía", null, null, 0);
+
+
+// 2. Eliminar el único nodo de la lista
+const listaUnica = new ListaEnlazada();
+listaUnica.agregarAlFinal(atencion1);
+const resUnica = listaUnica.eliminar((a) => a.motivo === "Vacunación");
+console.assert(resUnica.motivo === "Vacunación", "Error: debió devolver el dato eliminado");
+verificarEstado(listaUnica, "Border 2: Eliminar el único nodo", null, null, 0);
+
+const listaBordes = new ListaEnlazada();
+listaBordes.agregarAlFinal(atencion1).agregarAlFinal(atencion2).agregarAlFinal(atencion3);
+
+
+// Pruebas de buscar
+
+const encontrada = listaBordes.buscar((a) => a.veterinario === "Dr. Gómez");
+const noEncontrada = listaBordes.buscar((a) => a.costo > 500000);
+console.log("\nBúsqueda exitosa (Dr. Gómez):", encontrada);
+console.log("\nBúsqueda sin resultados (costo > $500.000):", noEncontrada);
+
+console.assert(encontrada?.motivo == "Control de peso", "Error en buscar existente");
+console.assert(noEncontrada === null, "Error en buscar inexistentes");
+
+
+// 3. Insertar después de la cola
+
+const inserto = listaBordes.insertarDespuesDe((a) => a.motivo === "Limpieza dental", atencion4);
+console.assert(inserto === true, `Error: debió insertar después de la cola`);
+verificarEstado(listaBordes, "Borde 3: Insertar después de la cola", "Vacunación", "Desparasitación", 4)
+
+
+// 4. Eliminar algo que no existe
+
+const resInexistente = listaBordes.eliminar((a) => a.motivo === "cirugía");
+console.log("\nDato Inexistente: ", resInexistente);
+console.assert(resInexistente === null, "Error: debió de devolver null al no exitir");
+verificarEstado(listaBordes, "Borde 4: Eliminar elemento inexistente", "Vacunación", "Desparasitación", 4);
+
+
+// 5. Eliminar la cabeza
+
+const resCabeza = listaBordes.eliminar((a => a.motivo === "Vacunación"));
+console.assert(resCabeza.motivo === "Vacunación", "Error al eliminar cabeza");
+verificarEstado(listaBordes, "Borde 5: Eliminar la cabeza", "Control de peso", "Desparasitación", 3);
+
+
+// 6. Eliminar la cola
+
+const resCola = listaBordes.eliminar((a) => a.motivo === "Desparasitación");
+console.assert(resCola.motivo === "Desparasitación", "Error al eliminar cola");
+verificarEstado(listaBordes, "Borde 6: Eliminar la cola", "Control de peso", "Limpieza dental", 2);
+
+

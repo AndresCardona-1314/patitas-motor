@@ -67,6 +67,10 @@ Al asignar `nodo1.siguiente = null`, el recorrido desde `cabeza` **solo logra vi
            cola ────┘
   ```
 
+
+
+
+
 - **Caso 2: Lista con 1 nodo (`cabeza === cola === [A]`)**
 
   - **Cambio:** `cola.siguiente` (que es `[A].siguiente`) apunta a `nuevo`, y luego `cola` se mueve a `nuevo`. `cabeza` no cambia.
@@ -130,3 +134,75 @@ Al asignar `nodo1.siguiente = null`, el recorrido desde `cabeza` **solo logra vi
                                                   ▲
                                          cola ────┘
   ```
+
+
+## Diagramas de `eliminar(condicion)`
+
+### Caso 1: Eliminar la cabeza (`anterior === null`, `actual === this.cabeza`)
+
+- **Lógica:** `this.cabeza` salta al segundo nodo (`this.cabeza.siguiente`). Si era el único nodo de la lista (`this.cabeza === null` tras moverla), también debemos poner `this.cola = null`.
+Plaintext
+
+```
+Antes:   cabeza ─► [ A ] ───► [ B ] ───► [ C ] ◄─ cola
+
+Después:           [ A ]      cabeza ─► [ B ] ───► [ C ] ◄─ cola
+                 (eliminado)
+```
+
+### Caso 2: Eliminar un nodo intermedio (`anterior = [A]`, `actual = [B]`)
+
+- **Lógica:** `anterior.siguiente` apunta directamente a `actual.siguiente` (`[C]`), saltándose `[B]`. Ni `cabeza` ni `cola` cambian.
+Plaintext
+
+```
+Antes:   cabeza ─► [ A ] ───► [ B ] ───► [ C ] ◄─ cola
+                  anterior   actual
+
+                     ┌───────────────────┐
+                     │                   ▼
+Después: cabeza ─► [ A ]      [ B ]    [ C ] ◄─ cola
+                            (eliminado)
+```
+
+### Caso 3: Eliminar la cola (`anterior = [B]`, `actual = [C] === this.cola`)
+
+- **Lógica:** `anterior.siguiente` pasa a ser `null` (nuevo final de la lista) y `this.cola` retrocede hacia `anterior` (`[B]`).
+Plaintext
+
+```
+Antes:   cabeza ─► [ A ] ───► [ B ] ───► [ C ] ◄─ cola
+                             anterior   actual
+
+Después: cabeza ─► [ A ] ───► [ B ] ──► null      [ C ]
+                                ▲               (eliminado)
+                       cola ────┘
+```
+
+
+## Complejidades y explicación
+
+| **Operación** | **Complejidad Temporal** | **Complejidad Espacial** | **Justificación** |
+|---|---|---|---|
+| **`agregarAlInicio(dato)`** | **$O(1)$** | **$O(1)$** | Usa la referencia directa `this.cabeza` sin recorrer nodos. |
+| **`agregarAlFinal(dato)`** | **$O(1)$** | **$O(1)$** | Usa la referencia directa `this.cola` sin recorrer nodos. |
+| **`buscar(condicion)`** | **$O(n)$** | **$O(1)$** | En el peor caso (el elemento está al final o no existe) debe visitar los $n$ nodos secuencialmente. |
+| **`insertarDespuesDe(condicion, dato)`** | **$O(n)$** | **$O(1)$** | El enlace de punteros toma $O(1)$, pero primero debe buscar el nodo objetivo recorriendo hasta $n$ elementos ($O(n)$). |
+| **`eliminar(condicion)`** | **$O(n)$** | **$O(1)$** | Incluso si el objetivo es la cola conocida (`this.cola`), necesita recorrer desde `this.cabeza` para encontrar el nodo **anterior**. |
+
+### ¿Por qué eliminar la cola en una lista simplemente enlazada requiere recorrerla ($O(n)$)?
+
+> **Explicación:** Aunque tengamos un puntero directo `this.cola` apuntando al último nodo (`[C]`), al eliminarlo debemos actualizar `this.cola` para que apunte al **penúltimo nodo** (`[B]`) y cambiar `B.siguiente = null`.
+>
+> En una lista **simplemente enlazada**, cada nodo únicamente almacena una referencia hacia adelante (`.siguiente`), pero **no tiene ninguna referencia hacia atrás (`.anterior`)**. Desde `[C]` es imposible saber qué dirección de memoria ocupa `[B]`. Por lo tanto, la única manera de descubrir quién es el penúltimo nodo es comenzar desde `this.cabeza` y avanzar paso a paso con dos punteros (`anterior` y `actual`) hasta que `actual === this.cola`, lo que obliga a recorrer los $n$ nodos ($O(n)$). *(Nota: Este problema es precisamente la razón por la cual existen las **Listas Doblemente Enlazadas**, donde cada nodo guarda `.siguiente` y `.anterior`, logrando eliminar la cola en $O(1)$).*
+
+
+
+
+
+
+
+
+
+
+
