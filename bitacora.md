@@ -196,6 +196,16 @@ Después: cabeza ─► [ A ] ───► [ B ] ──► null      [ C ]
 >
 > En una lista **simplemente enlazada**, cada nodo únicamente almacena una referencia hacia adelante (`.siguiente`), pero **no tiene ninguna referencia hacia atrás (`.anterior`)**. Desde `[C]` es imposible saber qué dirección de memoria ocupa `[B]`. Por lo tanto, la única manera de descubrir quién es el penúltimo nodo es comenzar desde `this.cabeza` y avanzar paso a paso con dos punteros (`anterior` y `actual`) hasta que `actual === this.cola`, lo que obliga a recorrer los $n$ nodos ($O(n)$). *(Nota: Este problema es precisamente la razón por la cual existen las **Listas Doblemente Enlazadas**, donde cada nodo guarda `.siguiente` y `.anterior`, logrando eliminar la cola en $O(1)$).*
 
+### Tabla Comparativa
+
+| **Operación** | **ListaEnlazada (con cabeza y cola)** | **Arreglo (Array en JS)** | **Explicación Técnica** |
+|---|---|---|---|
+| **Agregar al final** | **$O(1)$** | **$O(1)$** *(amortizado)* | La lista usa `this.cola.siguiente = nuevo` sin recorrer. El arreglo usa `.push()` al final de su bloque de memoria. |
+| **Agregar al inicio** | **$O(1)$** | **$O(n)$** | La lista solo cambia `nuevo.siguiente = this.cabeza` en 2 pasos. El arreglo (`.unshift()`) debe desplazar todos los $n$ elementos una posición a la derecha. |
+| **Acceder a la atención número $k$** | **$O(n)$** *(o $O(k)$)* | **$O(1)$** | El arreglo calcula la dirección exacta de memoria (`arr[k - 1]`) al instante. La lista debe caminar nodo por nodo desde `cabeza` contando hasta $k$. |
+| **Buscar (por condición)** | **$O(n)$** | **$O(n)$** | Sin ordenamiento previo ni índice hash, ambas estructuras deben revisar elemento por elemento hasta encontrar coincidencia o llegar al final. |
+| **Eliminar la primera** | **$O(1)$** | **$O(n)$** | La lista mueve `this.cabeza = this.cabeza.siguiente` en 1 paso. El arreglo (`.shift()`) debe mover los $n - 1$ elementos restantes hacia la izquierda para tapar el hueco. |
+
 
 
 
